@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Files</title>
+<style>
+  :root{
+    --chrome:#cfcac0;
+    --face:#e7e3da;
+    --paper:#fbfaf6;
+    --ink:#1c1a17;
+    --dim:#6c665c;
+    --line:#a8a296;
+    --sel:#2f5d8a;
+    --hi:#ffffff;
+    --lo:#8e8880;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *,*::before,*::after{box-sizing:inherit}
+
+  body{
+    margin:0;
+    background:var(--chrome);
+    color:var(--ink);
+    font:13px/1.45 Tahoma,Verdana,Geneva,"DejaVu Sans",sans-serif;
+    padding:18px 14px 40px;
+  }
+
+  .window{
+    max-width:880px;
+    margin:0 auto;
+    background:var(--face);
+    border-top:2px solid var(--hi);
+    border-left:2px solid var(--hi);
+    border-right:2px solid var(--lo);
+    border-bottom:2px solid var(--lo);
+  }
+
+  .titlebar{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    padding:6px 10px;
+    background:var(--sel);
+    color:#fff;
+  }
+  .titlebar h1{font-size:13px;font-weight:700;margin:0;letter-spacing:.02em}
+  .titlebar span{font-size:11px;color:#c6d8e9}
+
+  .toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px;
+    padding:8px 10px;
+    border-bottom:1px solid var(--line);
+  }
+  .toolbar button{
+    font:inherit;font-size:12px;padding:2px 9px;cursor:pointer;
+    background:var(--face);color:var(--ink);
+    border-top:1px solid var(--hi);border-left:1px solid var(--hi);
+    border-right:1px solid var(--lo);border-bottom:1px solid var(--lo);
+  }
+  .toolbar button:active{border-color:var(--lo) var(--hi) var(--hi) var(--lo)}
+  .toolbar .fill{flex:1 1 auto}
+
+  input[type=search]{
+    font:inherit;padding:3px 6px;width:170px;
+    background:var(--paper);color:var(--ink);
+    border-top:1px solid var(--lo);border-left:1px solid var(--lo);
+    border-right:1px solid var(--hi);border-bottom:1px solid var(--hi);
+  }
+  :focus-visible{outline:2px solid var(--sel);outline-offset:1px}
+
+  .scroll{overflow-x:auto}
+
+  .head{
+    display:flex;min-width:630px;
+    background:var(--face);border-bottom:1px solid var(--line);
+    font-weight:700;font-size:12px;padding:5px 10px;
+  }
+  .head .n{flex:1 1 auto;min-width:0}
+  .head .d{width:120px;flex:none}
+  .head .s{width:70px;flex:none;text-align:right}
+  .head .x{width:150px;flex:none;padding-left:14px}
+  .head .z{width:70px;flex:none;text-align:right}
+
+  .tree{min-width:630px;background:var(--paper)}
+  .row{display:flex;align-items:baseline;padding:3px 10px;white-space:pre}
+  .row:nth-child(even){background:#f3f1ea}
+  .row:hover{background:#e3ecf5}
+  .row .n{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .row .d{width:120px;flex:none;color:var(--dim);font-size:12px}
+  .row .s{width:70px;flex:none;text-align:right;color:var(--dim);font-size:12px}
+  .row .x{width:150px;flex:none;padding-left:14px;color:var(--dim);font-size:12px;
+          overflow:hidden;text-overflow:ellipsis}
+  .row .z{width:70px;flex:none;text-align:right;font-size:12px}
+
+  .guide{color:var(--line)}
+  .toggle{
+    font:inherit;background:none;border:0;padding:0;cursor:pointer;
+    color:var(--dim);
+  }
+  .toggle:hover{color:var(--sel)}
+  .icon{display:inline-block;width:1.15em;color:var(--dim)}
+  .dir{color:var(--ink);font-weight:700}
+  .file{color:var(--sel);text-decoration:none}
+  .file:hover{text-decoration:underline}
+  .nolink{color:var(--dim)}
+  mark{background:#fff0a8;color:inherit}
+
+  .zipbtn{
+    font:inherit;font-size:11px;padding:0 6px;cursor:pointer;
+    background:none;color:var(--sel);text-decoration:none;
+    border:1px solid var(--line);display:inline-block;
+  }
+  .zipbtn:hover{border-color:var(--sel)}
+
+  .statusbar{
+    display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:space-between;
+    padding:6px 10px;border-top:1px solid var(--line);
+    font-size:11px;color:var(--dim);
+  }
+  .note{padding:26px 14px;text-align:center;color:var(--dim);background:var(--paper)}
+  .note.bad{color:#8a2f2f}
+
+  @media (max-width:560px){
+    .head .d,.row .d{display:none}
+    .head .x,.row .x{display:none}
+    .head .z,.row .z{width:46px}
+    body{padding:0 0 30px}
+    .window{border-width:0 0 2px}
+  }
+</style>
+</head>
+<body>
+
+<div class="window">
+  <div class="titlebar">
+    <h1>Files</h1>
+    <span id="count"></span>
+  </div>
+
+  <div class="toolbar">
+    <button type="button" id="all">Expand all</button>
+    <button type="button" id="none">Collapse all</button>
+    <span class="fill"></span>
+    <input type="search" id="q" placeholder="Filter by name" aria-label="Filter by name">
+  </div>
+
+  <div class="scroll">
+    <div class="head">
+      <span class="n">Name</span>
+      <span class="d">Date modified</span>
+      <span class="s">Size</span>
+      <span class="x">Description</span>
+      <span class="z"></span>
+    </div>
+    <div class="tree" id="tree"></div>
+  </div>
+
+  <div id="note" class="note">Loading…</div>
+
+  <div class="statusbar">
+    <span id="stamp"></span>
+    <span id="next"></span>
+  </div>
+</div>
+
+<script>
+const REFRESH_MS = 5 * 60 * 1000;
+const ROOT_LABEL = 'Index of /';
+
+let root = { name: ROOT_LABEL, folder: true, children: [], key: '' };
+let rootZip = null;   // set from files.json
+let generated = null;
+let open = new Set(['']);            // expanded folder keys; root starts open
+let nextAt = Date.now() + REFRESH_MS;
+let nodesByKey = new Map();          // rebuilt on every render(); folders only
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+function bytes(n) {
+  if (n === null || n === undefined) return '';
+  const u = ['B', 'KB', 'MB', 'GB', 'TB'];
+  let i = 0;
+  while (n >= 1024 && i < u.length - 1) { n /= 1024; i++; }
+  return (i === 0 ? Math.round(n) : n.toFixed(n < 10 ? 1 : 0)) + ' ' + u[i];
+}
+
+function when(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${String(d.getDate()).padStart(2,'0')}-${m[d.getMonth()]}-${d.getFullYear()}`;
+}
+
+/** Flat list from files.json -> nested tree. */
+function build(files) {
+  const tree = { name: ROOT_LABEL, folder: true, children: [], key: '' };
+  const folders = new Map([['', tree]]);
+
+  for (const f of files.filter((f) => f.folder)) {
+    const key = [...(f.path || []), f.name].join('/');
+    folders.set(key, { ...f, key, children: [] });
+  }
+  for (const f of files) {
+    const parentKey = (f.path || []).join('/');
+    const parent = folders.get(parentKey) || tree;
+    parent.children.push(f.folder
+      ? folders.get([...(f.path || []), f.name].join('/'))
+      : { ...f, key: [...(f.path || []), f.name].join('/'), children: null });
+  }
+
+  const sort = (node) => {
+    if (!node.children) return;
+    node.children.sort((a, b) => {
+      if (a.folder !== b.folder) return a.folder ? -1 : 1;
+      return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
+    });
+    node.children.forEach(sort);
+  };
+  sort(tree);
+  return tree;
+}
+
+function matches(node, q) {
+  if (!q) return true;
+  if (node.name.toLowerCase().includes(q)) return true;
+  return (node.children || []).some((c) => matches(c, q));
+}
+
+function rows(node, prefix, isLast, depth, q, out) {
+  const expanded = open.has(node.key) || (q && depth > 0);
+  const kids = (node.children || []).filter((c) => matches(c, q));
+
+  if (depth > 0) {
+    out.push({ node, prefix, isLast, expanded, hasKids: !!node.children });
+  }
+  if (node.children && (expanded || depth === 0)) {
+    const nextPrefix = depth > 0 ? prefix + (isLast ? '    ' : '│   ') : '';
+    kids.forEach((c, i) => rows(c, nextPrefix, i === kids.length - 1, depth + 1, q, out));
+  }
+}
+
+function render() {
+  const q = $('q').value.trim().toLowerCase();
+  const out = [];
+  rows(root, '', true, 0, q, out);
+
+  nodesByKey = new Map([['', root]]);
+
+  const rootOpen = open.has('');
+  const head =
+    `<div class="row"><span class="n">` +
+    `<button class="toggle" type="button" data-key="" aria-expanded="${rootOpen}">` +
+    `${rootOpen ? '−' : '+'}</button> <span class="icon">${rootOpen ? '▾' : '▸'}</span>` +
+    `<span class="dir">${esc(ROOT_LABEL)}</span>` +
+    `</span><span class="d"></span><span class="s"></span><span class="x"></span>` +
+    `<span class="z">${rootZip ? `<a class="zipbtn" href="${esc(rootZip)}">zip</a>` : ''}</span></div>`;
+
+  const body = out.map(({ node, prefix, isLast, expanded, hasKids }) => {
+    if (hasKids) nodesByKey.set(node.key, node);
+    const guide = `<span class="guide">${prefix}${isLast ? '└── ' : '├── '}</span>`;
+    let label;
+    if (hasKids) {
+      label = `<button class="toggle" type="button" data-key="${esc(node.key)}" ` +
+              `aria-expanded="${expanded}">${expanded ? '−' : '+'}</button> ` +
+              `<span class="icon">${expanded ? '▾' : '▸'}</span>` +
+              `<span class="dir">${mark(node.name, q)}</span>`;
+    } else if (node.downloadUrl) {
+      label = `<span class="icon"> </span><a class="file" href="${esc(node.downloadUrl)}">${mark(node.name, q)}</a>`;
+    } else {
+      label = `<span class="icon"> </span><span class="nolink">${mark(node.name, q)}</span>`;
+    }
+    const zip = hasKids && node.zipAsset
+      ? `<a class="zipbtn" href="${esc(node.zipAsset)}">zip</a>`
+      : '';
+    return `<div class="row">` +
+      `<span class="n">${guide}${label}</span>` +
+      `<span class="d">${when(node.modified)}</span>` +
+      `<span class="s">${node.folder ? '' : bytes(node.size)}</span>` +
+      `<span class="x">${esc(node.description || '')}</span>` +
+      `<span class="z">${zip}</span>` +
+      `</div>`;
+  }).join('');
+
+  $('tree').innerHTML = rootOpen || q ? head + body : head;
+
+  const files = countFiles(root);
+  $('count').textContent = files + (files === 1 ? ' file' : ' files');
+  $('stamp').textContent = generated ? 'List updated ' +
+    new Date(generated).toLocaleString([], { year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
+
+  const empty = out.length === 0;
+  $('note').hidden = !empty;
+  if (empty) $('note').textContent = q ? 'Nothing matches that name.' : 'Nothing here yet.';
+  tick();
+}
+
+function mark(name, q) {
+  const safe = esc(name);
+  if (!q) return safe;
+  const i = name.toLowerCase().indexOf(q);
+  if (i < 0) return safe;
+  return esc(name.slice(0, i)) + '<mark>' + esc(name.slice(i, i + q.length)) +
+         '</mark>' + esc(name.slice(i + q.length));
+}
+
+function countFiles(node) {
+  if (!node.children) return 1;
+  return node.children.reduce((n, c) => n + countFiles(c), 0);
+}
+
+function everyFolder(node, out = []) {
+  if (node.children) {
+    out.push(node.key);
+    node.children.forEach((c) => everyFolder(c, out));
+  }
+  return out;
+}
+
+async function load() {
+  try {
+    const res = await fetch('files.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    root = build(data.files || []);
+    rootZip = data.rootZip || null;
+    generated = data.generated || null;
+    $('note').className = 'note';
+    render();
+  } catch (err) {
+    $('tree').innerHTML = '';
+    $('note').className = 'note bad';
+    $('note').hidden = false;
+    $('note').textContent = 'Could not load the file list. It will try again shortly.';
+  }
+  nextAt = Date.now() + REFRESH_MS;
+}
+
+function tick() {
+  const left = Math.max(0, nextAt - Date.now());
+  $('next').textContent = `Checking again in ${Math.floor(left / 60000)}:` +
+    String(Math.floor((left % 60000) / 1000)).padStart(2, '0');
+}
+
+$('tree').addEventListener('click', (e) => {
+  const t = e.target.closest('.toggle');
+  if (!t) return;
+  const key = t.dataset.key;
+  open.has(key) ? open.delete(key) : open.add(key);
+  render();
+});
+
+$('all').addEventListener('click', () => { open = new Set(everyFolder(root)); render(); });
+$('none').addEventListener('click', () => { open = new Set(['']); render(); });
+$('q').addEventListener('input', render);
+
+load();
+setInterval(load, REFRESH_MS);
+setInterval(tick, 1000);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && Date.now() > nextAt) load();
+});
+</script>
+</body>
+</html>

@@ -12,7 +12,10 @@
   }
   *,*::before,*::after{box-sizing:inherit}
   html,body{margin:0;min-height:100%}
-  body{font:13px/1.45 Tahoma,Verdana,Geneva,"DejaVu Sans",sans-serif;background:#cfcac0;color:#1c1a17}
+  body{font:13px/1.45 Tahoma,Verdana,Geneva,"DejaVu Sans",sans-serif;background:#cfcac0;color:#1c1a17;transition:background .15s}
+  body.page-dark{background:#141312}
+  body.page-dark .switch-theme{color:#8d8163}
+  body.page-dark .switch-theme button{color:#f2e3ad}
 
   /* ---------- Theme picker ---------- */
   #picker{max-width:720px;margin:0 auto;padding:40px 18px}
@@ -466,6 +469,7 @@ const Browser = (() => {
               <th data-sort="name" scope="col">Name</th>
               <th data-sort="modified" class="date" scope="col">Date modified</th>
               <th data-sort="size" class="num" scope="col">Size</th>
+              <th class="num" scope="col">Zip</th>
             </tr></thead>
             <tbody id="br-rows"></tbody>
           </table>
@@ -523,7 +527,7 @@ const Browser = (() => {
             ? `<a href="${esc(f.downloadUrl)}"><span class="icon">·</span>${name}</a>`
             : `<span><span class="icon">·</span>${name}</span>`);
       const desc = f.description ? `<span class="desc">${esc(f.description)}</span>` : '';
-      const dl = !f.folder && f.downloadUrl ? `<a class="zipbtn" href="${esc(f.downloadUrl)}">Download</a>`
+      const dl = !f.folder && f.downloadUrl ? `<a class="zipbtn" href="${esc(f.downloadUrl)}">zip</a>`
         : (f.folder && f.zipAsset ? `<a class="zipbtn" href="${esc(f.zipAsset)}">zip</a>` : '');
       return `<tr><td class="name">${label}${desc}</td><td class="date">${whenLong(f.modified)}</td>` +
         `<td class="size num">${f.folder ? '' : bytes(f.size)}</td><td class="num">${dl}</td></tr>`;
@@ -729,6 +733,7 @@ function tickInto(sel, root) {
 function showPicker() {
   document.getElementById('picker').hidden = false;
   document.getElementById('app').hidden = true;
+  document.body.classList.remove('page-dark');
 }
 
 function showTheme(name) {
@@ -736,6 +741,7 @@ function showTheme(name) {
   document.getElementById('picker').hidden = true;
   const app = document.getElementById('app');
   app.hidden = false;
+  document.body.classList.toggle('page-dark', name === 'cards');
   ['explorer', 'browser', 'cards'].forEach((t) => {
     const el = document.getElementById('theme-' + t);
     el.hidden = t !== name;

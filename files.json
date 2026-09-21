@@ -1,0 +1,163 @@
+{
+  "files": [
+    {
+      "id": 1120449,
+      "name": "cli",
+      "folder": true,
+      "path": [
+        "cloud1",
+        "Python"
+      ],
+      "size": null,
+      "extension": null,
+      "modified": "2026-09-15 07:28:46",
+      "description": null,
+      "zipAsset": "https://github.com/xerri147/roms/releases/download/file-zips/cloud1_Python_cli.zip"
+    },
+    {
+      "id": 1120447,
+      "name": "cloud1",
+      "folder": true,
+      "path": [],
+      "size": null,
+      "extension": null,
+      "modified": "2026-09-16 17:47:08",
+      "description": null,
+      "zipAsset": "https://github.com/xerri147/roms/releases/download/file-zips/cloud1.zip"
+    },
+    {
+      "id": 1120448,
+      "name": "Python",
+      "folder": true,
+      "path": [
+        "cloud1"
+      ],
+      "size": null,
+      "extension": null,
+      "modified": "2026-09-16 17:47:08",
+      "description": null,
+      "zipAsset": "https://github.com/xerri147/roms/releases/download/file-zips/cloud1_Python.zip"
+    },
+    {
+      "id": 1120462,
+      "name": "ref",
+      "folder": true,
+      "path": [
+        "cloud1",
+        "Python"
+      ],
+      "size": null,
+      "extension": null,
+      "modified": "2026-09-16 17:47:08",
+      "description": null,
+      "zipAsset": "https://github.com/xerri147/roms/releases/download/file-zips/cloud1_Python_ref.zip"
+    },
+    {
+      "id": 2321252,
+      "name": "exercise-2.pdf",
+      "folder": false,
+      "path": [
+        "cloud1",
+        "Python",
+        "ref"
+      ],
+      "size": 427818,
+      "extension": "pdf",
+      "modified": null,
+      "description": "exercise,2,pdf",
+      "downloadUrl": "https://www.udrop.com/PHjS/exercise-2.pdf?download_token=11afdb9a1d4e4ef8e4035202b20af2653cc5f878f4745bcb3d197abb1b9c2ac9"
+    },
+    {
+      "id": 2319572,
+      "name": "exp 1.py",
+      "folder": false,
+      "path": [
+        "cloud1",
+        "Python",
+        "cli"
+      ],
+      "size": 244,
+      "extension": "py",
+      "modified": null,
+      "description": "exp1,py",
+      "downloadUrl": "https://www.udrop.com/PGSM/exp_1.py?download_token=18f800c25d258d8ba618bd36a605cfa9329beccdb1e1fb823a874e2289ea6dc9"
+    },
+    {
+      "id": 2319567,
+      "name": "exp 2.py",
+      "folder": false,
+      "path": [
+        "cloud1",
+        "Python",
+        "cli"
+      ],
+      "size": 363,
+      "extension": "py",
+      "modified": null,
+      "description": "exp,2,py",
+      "downloadUrl": "https://www.udrop.com/PGSH/exp_2.py?download_token=de9c4ed26a589ba7f79b8188d2525097b7bcb242335a4545eb2179fbf19d0051"
+    },
+    {
+      "id": 2319568,
+      "name": "exp 3.py",
+      "folder": false,
+      "path": [
+        "cloud1",
+        "Python",
+        "cli"
+      ],
+      "size": 156,
+      "extension": "py",
+      "modified": null,
+      "description": "exp,3,py",
+      "downloadUrl": "https://www.udrop.com/PGSI/exp_3.py?download_token=aee9a2a2759ebbd3adedccd61438eb3e4f98638c7579f7b49391193c0923741b"
+    },
+    {
+      "id": 2319569,
+      "name": "exp 4.py",
+      "folder": false,
+      "path": [
+        "cloud1",
+        "Python",
+        "cli"
+      ],
+      "size": 1159,
+      "extension": "py",
+      "modified": null,
+      "description": "exp,4,py",
+      "downloadUrl": "https://www.udrop.com/PGSJ/exp_4.py?download_token=2224b171018630af3fa24fbc4d2964e2f56bc219568e25c20c87bde2dc112f07"
+    },
+    {
+      "id": 2319570,
+      "name": "exp 5.py",
+      "folder": false,
+      "path": [
+        "cloud1",
+        "Python",
+        "cli"
+      ],
+      "size": 410,
+      "extension": "py",
+      "modified": null,
+      "description": "exp,5,py",
+      "downloadUrl": "https://www.udrop.com/PGSK/exp_5.py?download_token=58061e3cd24ff372b479d1b33b583fc37152d6c5fbb45bf7cbca2ea6fddedc4a"
+    },
+    {
+      "id": 2319571,
+      "name": "exp 6.py",
+      "folder": false,
+      "path": [
+        "cloud1",
+        "Python",
+        "cli"
+      ],
+      "size": 127,
+      "extension": "py",
+      "modified": null,
+      "description": "exp,6,py",
+      "downloadUrl": "https://www.udrop.com/PGSL/exp_6.py?download_token=1929ea7519f65e703c8e97f68f8f28f3e7319b46ed8196dc626059d29928a254"
+    }
+  ],
+  "rootZip": "https://github.com/xerri147/roms/releases/download/file-zips/root.zip",
+  "generated": "2026-09-21T19:38:26.231Z"
+}

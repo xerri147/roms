@@ -1,0 +1,49 @@
+name: Sync file list
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'   # every 5 minutes (GitHub's minimum)
+  workflow_dispatch:         # lets you run it by hand from the Actions tab
+  push:
+    branches: [main]
+
+permissions:
+  contents: write   # needed to commit files.json AND to create/update the
+                     # "file-zips" release that hosts the .zip assets
+
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Pull drive listing, resolve links, build zips
+        env:
+          UDROP_KEY1: ${{ secrets.UDROP_KEY1 }}
+          UDROP_KEY2: ${{ secrets.UDROP_KEY2 }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # ROOT_FOLDER_ID: '123'
+        run: node scripts/sync.js
+
+      - name: Commit if changed
+        run: |
+          if [[ -n "$(git status --porcelain files.json)" ]]; then
+            git config user.name  'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add files.json
+            git commit -m "Update file list"
+            git push
+          else
+            echo "Nothing to commit."
+          fi

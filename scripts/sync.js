@@ -241,34 +241,52 @@ flat.sort((a, b) => {
   return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
 });
 
-// Skip the (expensive) zip step entirely if nothing actually changed.
+// download_url tokens are per-run and may expire, so files.json (and its
+// links) get rewritten on EVERY run, even when nothing else changed. Only
+// the expensive part — downloading every file's bytes and rebuilding zips —
+// is skipped when the folder structure itself hasn't changed.
 const prevRaw = await readFile(OUT, 'utf8').catch(() => '');
-let prevComparable = '';
-try {
-  const prev = JSON.parse(prevRaw).files || [];
-  prevComparable = JSON.stringify(prev.map(({ id, name, folder, path, size }) => ({ id, name, folder, path, size })));
-} catch { /* no previous file, or unreadable — proceed */ }
-const nextComparable = JSON.stringify(flat.map(({ id, name, folder, path, size }) => ({ id, name, folder, path, size })));
+let prevParsed = null;
+try { prevParsed = JSON.parse(prevRaw); } catch { /* no previous file, or unreadable */ }
 
-if (prevComparable === nextComparable) {
-  console.log(`No changes (${flat.length} entries). Skipping zip rebuild.`);
-  process.exit(0);
+const comparable = (list) =>
+  JSON.stringify((list || []).map(({ id, name, folder, path, size }) => ({ id, name, folder, path, size })));
+const structureChanged = comparable(prevParsed?.files) !== comparable(flat);
+
+let rootZip = prevParsed?.rootZip || null;
+const prevZipByKey = new Map(
+  (prevParsed?.files || [])
+    .filter((f) => f.folder)
+    .map((f) => [[...(f.path || []), f.name].join('/'), f.zipAsset || null])
+);
+
+if (structureChanged || !prevParsed) {
+  await rm(CACHE, { recursive: true, force: true });
+  await mkdir(CACHE, { recursive: true });
+
+  const release = await getOrCreateRelease();
+  const flatByKey = new Map();
+  for (const f of flat) {
+    if (f.folder) flatByKey.set([...(f.path || []), f.name].join('/'), f);
+  }
+  await zipAndPublishAll(tree, flatByKey, release);
+
+  for (const f of flat) {
+    if (f.folder) f.zipAsset = flatByKey.get([...(f.path || []), f.name].join('/'))?.zipAsset || null;
+  }
+  rootZip = flatByKey.get('')?.zipAsset || rootZip;
+
+  await rm(CACHE, { recursive: true, force: true });
+  console.log('Folder contents changed — rebuilt zips.');
+} else {
+  // Structure unchanged: carry forward the existing zip asset URLs untouched
+  // (they're still correct — zips don't depend on udrop tokens) and only
+  // refresh each file's download link.
+  for (const f of flat) {
+    if (f.folder) f.zipAsset = prevZipByKey.get([...(f.path || []), f.name].join('/')) || null;
+  }
+  console.log('Folder contents unchanged — reused existing zips, refreshed file links only.');
 }
-
-await rm(CACHE, { recursive: true, force: true });
-await mkdir(CACHE, { recursive: true });
-
-const release = await getOrCreateRelease();
-const flatByKey = new Map();
-for (const f of flat) {
-  if (f.folder) flatByKey.set([...(f.path || []), f.name].join('/'), f);
-}
-await zipAndPublishAll(tree, flatByKey, release);
-
-// Root zip asset (if any) is stored under the '' key by zipAndPublishAll.
-const rootZip = flatByKey.get('')?.zipAsset || null;
-
-await rm(CACHE, { recursive: true, force: true });
 
 await writeFile(OUT, JSON.stringify({
   files: flat,

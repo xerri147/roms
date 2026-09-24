@@ -65,7 +65,7 @@
       "extension": "pdf",
       "modified": null,
       "description": "exercise,2,pdf",
-      "downloadUrl": "https://www.udrop.com/PHjS/exercise-2.pdf?download_token=1fde01a55ec8c46c6940c4e2965b67a723e20b7b2e70d621e3b03bf2d45ef418"
+      "downloadUrl": "https://www.udrop.com/PHjS/exercise-2.pdf?download_token=ac3fa8e8dd4d7a9e8a4e9535590e36aae823c4624416f94e88c2d63917547b91"
     },
     {
       "id": 2319572,
@@ -80,7 +80,7 @@
       "extension": "py",
       "modified": null,
       "description": "exp1,py",
-      "downloadUrl": "https://www.udrop.com/PGSM/exp_1.py?download_token=b89aafd16c63207e7607c34522a7bdb4bee3111765cf6648d519878f88036fea"
+      "downloadUrl": "https://www.udrop.com/PGSM/exp_1.py?download_token=b471fadf5d86b7bc953ca9814fcd8a75a4c3f38f69b99ce73c575ade2a7a6195"
     },
     {
       "id": 2319567,
@@ -95,7 +95,7 @@
       "extension": "py",
       "modified": null,
       "description": "exp,2,py",
-      "downloadUrl": "https://www.udrop.com/PGSH/exp_2.py?download_token=af4e230d0f24aaf2cbbd028aeb1362db2ad913903b60dd584b1ab1ff6e74b54f"
+      "downloadUrl": "https://www.udrop.com/PGSH/exp_2.py?download_token=fe5ea7157521a828b6755eee4f1aa9fc9e32aedd36f7632ce998af5c479a13f2"
     },
     {
       "id": 2319568,
@@ -110,7 +110,7 @@
       "extension": "py",
       "modified": null,
       "description": "exp,3,py",
-      "downloadUrl": "https://www.udrop.com/PGSI/exp_3.py?download_token=feff6e39254fc692505608468edf37eb02bcbe6f679a990b4246f474e3b15982"
+      "downloadUrl": "https://www.udrop.com/PGSI/exp_3.py?download_token=7f60a4bc13e811e257cbf1930117006846e9d804082ff47bb1a382dd1a75b09b"
     },
     {
       "id": 2319569,
@@ -125,7 +125,7 @@
       "extension": "py",
       "modified": null,
       "description": "exp,4,py",
-      "downloadUrl": "https://www.udrop.com/PGSJ/exp_4.py?download_token=f5903d35e8db8f77370d2fb2f2f48cccad9241a705bbccde0d30a1c6ca92428c"
+      "downloadUrl": "https://www.udrop.com/PGSJ/exp_4.py?download_token=76199b64671194bbe616bf90214fa9771357adeefa8abcbe51e9826ee51fd568"
     },
     {
       "id": 2319570,
@@ -140,7 +140,7 @@
       "extension": "py",
       "modified": null,
       "description": "exp,5,py",
-      "downloadUrl": "https://www.udrop.com/PGSK/exp_5.py?download_token=55dacc455abd28bd51283c75412fa35b5453adc62ba068cc886cf19befa8562e"
+      "downloadUrl": "https://www.udrop.com/PGSK/exp_5.py?download_token=bbce89c73d33bd926ec0ab6c0baced25e5a62154e331c6e4d541f98d0bd8fac6"
     },
     {
       "id": 2319571,
@@ -155,9 +155,9 @@
       "extension": "py",
       "modified": null,
       "description": "exp,6,py",
-      "downloadUrl": "https://www.udrop.com/PGSL/exp_6.py?download_token=b7792131ab7b134a8229d3060b8ba8707ba99372060611ba513b9e36183ca966"
+      "downloadUrl": "https://www.udrop.com/PGSL/exp_6.py?download_token=e4386efac97cec7060f0611854684ad3e7c78d81cc3c7d75ab811afd5b3c44c6"
     }
   ],
   "rootZip": "https://github.com/xerri147/roms/releases/download/file-zips/root.zip",
-  "generated": "2026-09-24T23:21:19.958Z"
+  "generated": "2026-09-24T23:31:37.537Z"
 }
